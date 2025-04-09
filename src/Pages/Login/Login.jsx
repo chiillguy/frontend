@@ -7,10 +7,12 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
       const response = await fetch("http://127.0.0.1:8000/api/login", {
@@ -18,22 +20,37 @@ const Login = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      });      
+        body: JSON.stringify({ email, password }),
+      });
 
       const data = await response.json();
+      setLoading(false);
 
-      if (response.ok) {
+      if (response.ok && data.token && data.user) {
+        // Simpan token dan user
+
+        const user = data.user; // ✅ AMBIL user DULU
+        const role = user.role; // ✅ Ambil role-nya
+
+      console.log("Role dari backend:", role);
+
+        localStorage.clear();
         localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        navigate("/");
+        localStorage.setItem("role", role);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        if (role === "admin") {
+          navigate("/dashboard/admin");
+        } else if (role === "chef") {
+          navigate("/dashboard/admin"); // pastikan route ini ada ya
+        } else {
+          navigate("/");
+        }
       } else {
         setError("Login gagal, periksa email atau password.");
       }
     } catch (error) {
+      setLoading(false);
       setError("Terjadi kesalahan, coba lagi nanti.");
       console.error("Login Error:", error);
     }
@@ -77,9 +94,10 @@ const Login = () => {
           </div>
           <button
             type="submit"
+            disabled={loading}
             className="w-full border border-white text-white font-semibold py-2 rounded-lg hover:bg-white hover:text-gray-900 transition duration-200"
           >
-            LOGIN
+            {loading ? "Loading..." : "LOGIN"}
           </button>
         </form>
 

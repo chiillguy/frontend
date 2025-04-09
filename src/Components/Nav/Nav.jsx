@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaSignOutAlt } from "react-icons/fa";
 import navCSS from "./Nav.module.css";
 
-const Nav = ({ setShowLogin }) => {
+const Nav = () => {
     const menu = useRef();
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
@@ -107,7 +107,7 @@ const Nav = ({ setShowLogin }) => {
             <ul ref={menu}>
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/recipe">Recipes</Link></li>
-                <li><Link to="/blogs">Blogs</Link></li>
+                {/* <li><Link to="/blogs">Blogs</Link></li> */}
                 <li><Link to="/event">Event</Link></li>
             </ul>
 
@@ -164,10 +164,10 @@ const Nav = ({ setShowLogin }) => {
                         )}
                     </div>
                 ) : (
-                    <div className={navCSS.LoginBtn} onClick={() => setShowLogin(true)}>
-                        <i className="ri-user-line"></i>
-                        <Link to="/login">Login</Link>
-                    </div>
+                    <Link to="/login" className={navCSS.LoginBtn}>
+                        <i className="ri-user-line"></i> Login
+                    </Link>
+
                 )}
 
                 <i className="ri-menu-line" onClick={MenuHandler} id={navCSS.bars}></i>

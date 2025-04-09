@@ -9,10 +9,10 @@ function Footer() {
                     <a href="#">Foodieland<span>.</span></a>
                 </div>
                 <div className={footerCSS.social}>
-                    <i className="ri-instagram-line"></i>
-                    <i className="ri-facebook-fill"></i>
-                    <i className="ri-twitter-x-line"></i>
-                    <i className="ri-tiktok-fill"></i>
+                    <a href="https://www.instagram.com/" target="blank"><i className="ri-instagram-line"></i></a>
+                    <a href="https://web.facebook.com/" target="blank"><i className="ri-facebook-fill"></i></a>
+                    <a href="https://x.com/" target="blank"><i className="ri-twitter-x-line"></i></a>
+                    <a href="https://www.tiktok.com/" target="blank"><i className="ri-tiktok-fill"></i></a>
                 </div>
             </div>
             <div className={footerCSS.bottom_container}>

@@ -12,6 +12,8 @@
   
   .search_wrapper h2 {
     padding-left: 3px;
+    font-size: 30px;
+    font-weight: 600;
   }
   
   .search_wrapper::after {

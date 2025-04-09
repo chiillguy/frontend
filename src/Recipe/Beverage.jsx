@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const Recipe = ({ searchTerm }) => {
+const Beverage = ({ searchTerm }) => {
   const [recipes, setRecipes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const category = "beverage";
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -23,7 +24,7 @@ const Recipe = ({ searchTerm }) => {
       return;
     }
 
-    fetch(`http://127.0.0.1:8000/api/recipes?page=${currentPage}&limit=6`, {
+    fetch(`http://127.0.0.1:8000/api/recipes?page=${currentPage}&category=${category}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -37,8 +38,15 @@ const Recipe = ({ searchTerm }) => {
         return response.json();
       })
       .then((data) => {
-        setRecipes(data.data || []);
-        setTotalPages(data.meta?.last_page || 1);
+        console.log("API Response:", data);
+        console.log("Recipes Data:", data.data);
+
+        const filteredData = data.data?.filter(recipe => recipe.category === "Beverage") || [];
+        console.log("Filtered Recipes:", filteredData);
+
+        setRecipes(filteredData);
+        const newTotalPages = Math.ceil(filteredData.length / data.meta?.per_page) || 1;
+        setTotalPages(newTotalPages);
         setLoading(false);
       })
       .catch(() => {
@@ -56,8 +64,8 @@ const Recipe = ({ searchTerm }) => {
   return (
     <div className="container mx-auto p-4 pt-40 bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-[#a8613b]">Recipe List</h1>
-        {user && (user.role === "chef") && (
+        <h1 className="text-3xl font-bold text-[#a8613b]">Recipe List - Beverage</h1>
+        {user && (user.role === "chef" || user.role === "admin") && (
           <Link
             to="/recipe/create"
             className="bg-[#a8613b] text-white px-6 py-2 rounded-lg hover:bg-[#8c4c2f] transition duration-300"
@@ -90,7 +98,7 @@ const Recipe = ({ searchTerm }) => {
                   {recipe.description.substring(0, 100)}...
                 </p>
                 <p className="text-sm text-gray-500 mt-2">
-                  Dibuat oleh:{" "}
+                  Dibuat oleh: {" "}
                   <span className="font-medium text-[#a8613b]">
                     {recipe.chef}
                   </span>
@@ -130,4 +138,4 @@ const Recipe = ({ searchTerm }) => {
   );
 };
 
-export default Recipe;
+export default Beverage;
